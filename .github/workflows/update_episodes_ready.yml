@@ -2,32 +2,33 @@ name: Auto Update Episodes
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # كل 6 ساعات
-  workflow_dispatch:        # لتشغيله يدويًا من GitHub
+    - cron: "0 */6 * * *" # كل 6 ساعات
+  workflow_dispatch:
 
 jobs:
   update:
+    if: ${{ github.server_url == 'https://github.com' && github.token != '' }}
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.x"
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+      - name: Install requirements
+        run: pip install -r requirements.txt
 
-      - name: Run fetch script
-        run: python fetch_episodes_ready.py
+      - name: Run episode fetcher
+        run: python fetch_episodes.py
 
       - name: Commit changes
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
           git add episodes.json
-          git commit -m "🔄 Update episodes.json automatically" || echo "No changes to commit"
+          git commit -m "Auto update episodes [skip ci]" || echo "No changes to commit"
           git push
