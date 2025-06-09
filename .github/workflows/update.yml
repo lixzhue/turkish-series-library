@@ -2,8 +2,8 @@ name: Update Turkish Series Library
 
 on:
   schedule:
-    - cron: "0 */6 * * *"  # كل 6 ساعات
-  workflow_dispatch:       # يمكن تشغيله يدويًا أيضًا
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
 
 jobs:
   update:
@@ -20,9 +20,8 @@ jobs:
 
       - name: Install requirements
         run: |
-          echo "🔍 البحث عن ملف requirements.txt"
-          find . -name "requirements.txt"
-          pip install -r $(find . -name "requirements.txt")
+          echo "🔍 تثبيت الحزم من requirements.txt"
+          pip install -r .github/workflows/requirements.txt
 
       - name: Run scraper script
         run: python fetch_episodes_ready.py
