@@ -1,9 +1,9 @@
-name: Auto Update Episodes
+name: Update Turkish Series Library
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # كل 6 ساعات
-  workflow_dispatch:
+    - cron: "0 */6 * * *"  # كل 6 ساعات
+  workflow_dispatch:       # يمكن تشغيله يدويًا أيضًا
 
 jobs:
   update:
@@ -16,18 +16,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'  # آخر إصدار مدعوم من Python
+          python-version: "3.10"
 
       - name: Install requirements
-        run: pip install -r requirements.txt
+        run: |
+          echo "🔍 البحث عن ملف requirements.txt"
+          find . -name "requirements.txt"
+          pip install -r $(find . -name "requirements.txt")
 
       - name: Run scraper script
-        run: python fetch_episodes.py
+        run: python fetch_episodes_ready.py
 
       - name: Commit and push changes
         run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@users.noreply.github.com'
-          git add episodes.json
-          git commit -m "Auto update episodes"
+          git config --global user.email "github-actions@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+          git add .
+          git commit -m "📦 تحديث تلقائي للمكتبة" || echo "لا توجد تغييرات"
           git push
