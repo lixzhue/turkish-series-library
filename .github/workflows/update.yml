@@ -1,43 +1,36 @@
-name: Auto Update Episodes
+name: Update Turkish Series Library
 
 on:
   schedule:
     - cron: "0 */6 * * *"  # كل 6 ساعات
-  workflow_dispatch:       # تشغيل يدوي من GitHub
+  workflow_dispatch:       # يمكن تشغيله يدويًا أيضًا
 
 jobs:
   update:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: Verify and Install requirements
-      run: |
-        echo "📁 Current directory: $(pwd)"
-        echo "📄 Listing files:"
-        ls -al
-        if [ -f "requirements.txt" ]; then
-          echo "✅ requirements.txt found. Installing..."
-          pip install -r requirements.txt
-        else
-          echo "❌ requirements.txt not found!"
-          exit 1
-        fi
+      - name: Install requirements
+        run: |
+          echo "🔍 البحث عن ملف requirements.txt"
+          find . -name "requirements.txt"
+          pip install -r $(find . -name "requirements.txt")
 
-    - name: Run scraper script
-      run: python fetch_episodes_ready.py
+      - name: Run scraper script
+        run: python fetch_episodes_ready.py
 
-    - name: Commit and push changes
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add .
-        git commit -m "🔄 تحديث الحلقات تلقائيًا"
-        git push
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "github-actions@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+          git add .
+          git commit -m "📦 تحديث تلقائي للمكتبة" || echo "لا توجد تغييرات"
+          git push
