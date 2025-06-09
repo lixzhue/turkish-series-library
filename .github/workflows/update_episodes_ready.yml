@@ -9,24 +9,24 @@ jobs:
   update:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: Install dependencies
-        run: pip install requests beautifulsoup4
+      - name: Install requirements
+        run: pip install -r requirements.txt
 
-      - name: Run scraper
-        run: python scraper.py
+      - name: Run episode fetcher
+        run: python fetch_episodes.py
 
       - name: Commit changes
         run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
           git add episodes.json
-          git commit -m "Auto update episodes" || echo "No changes"
+          git commit -m "Auto update episodes [skip ci]" || echo "No changes to commit"
           git push
