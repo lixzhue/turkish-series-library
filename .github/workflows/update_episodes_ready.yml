@@ -7,7 +7,7 @@ on:
 
 jobs:
   update:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04  # <= مهم جداً تحديد 22.04 وليس ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.10"  # تأكد من أنها 3.10
 
       - name: Install requirements
         run: pip install -r requirements.txt
