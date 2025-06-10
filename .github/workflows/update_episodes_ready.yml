@@ -1,4 +1,4 @@
-name: update
+name: Auto Update Episodes
 
 on:
   schedule:
@@ -18,19 +18,18 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install requirements
+      - name: Install required Python packages
         run: |
-          echo "🔧 تثبيت المكتبات المطلوبة من requirements.txt"
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 lxml fake-useragent
 
-      - name: Run scraper script
-        run: python .github/workflows/fetch_episodes_ready.py
+      - name: Run fetch script
+        run: python fetch_episodes_ready.py
 
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add .
-          git commit -m "📦 تحديث تلقائي للحلقات"
+          git add episodes.json
+          git commit -m "🔄 تحديث حلقات المسلسلات تلقائيًا" || echo "لا تغييرات"
           git push
-        continue-on-error: true
