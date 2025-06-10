@@ -2,7 +2,7 @@ name: Auto Update Episodes
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # كل 6 ساعات
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -27,9 +30,11 @@ jobs:
         run: python fetch_episodes_ready.py
 
       - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add episodes.json
-          git commit -m "🔄 تحديث حلقات المسلسلات تلقائيًا" || echo "لا تغييرات"
+          git diff --cached --quiet || git commit -m "🔄 تحديث حلقات المسلسلات تلقائيًا"
           git push
