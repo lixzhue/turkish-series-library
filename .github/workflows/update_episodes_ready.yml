@@ -18,18 +18,19 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Python dependencies
+      - name: Install requirements
         run: |
-          echo "🔧 تثبيت المتطلبات من requirements.txt"
+          echo "🔧 تثبيت المكتبات المطلوبة من requirements.txt"
           pip install -r requirements.txt
 
       - name: Run scraper script
-        run: python scraper.py
+        run: python .github/workflows/fetch_episodes_ready.py
 
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add .
-          git commit -m "🔄 تحديث الحلقات تلقائيًا"
+          git commit -m "📦 تحديث تلقائي للحلقات"
           git push
+        continue-on-error: true
