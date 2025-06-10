@@ -2,7 +2,7 @@ name: update
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # تشغيل كل 6 ساعات
+    - cron: '0 */6 * * *'  # كل 6 ساعات
   workflow_dispatch:
 
 jobs:
@@ -18,10 +18,9 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install requirements
+      - name: Install Python dependencies
         run: |
-          echo "🔍 البحث عن ملف requirements.txt"
-          ls -al
+          echo "🔧 تثبيت المتطلبات من requirements.txt"
           pip install -r requirements.txt
 
       - name: Run scraper script
